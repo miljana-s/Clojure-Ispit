@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to healthcenter</title>
+    <title>Health center Active</title>
 
     <!-- styles -->
     {% style "/assets/bulma/css/bulma.min.css" %}
@@ -26,7 +26,13 @@
               <div id="nav-menu" class="navbar-menu">
                   <div class="navbar-start">
                       <a href="/" class="navbar-item{% ifequal page "home.html" %} is-active{%endifequal%}">Home</a>
-                      <a href="/about" class="navbar-item{% ifequal page "about.html" %} is-active{%endifequal%}">About</a>
+                      <a href="/patients" class="navbar-item{% ifequal page "patients.html" %} is-active{%endifequal%}">Patients</a>
+                      <a href="/appointments" class="navbar-item{% ifequal page "appointments.html" %} is-active{%endifequal%}">Appointments</a>
+                      <a href="/treatments" class="navbar-item{% ifequal page "treatments.html" %} is-active{%endifequal%}">Treatments</a>
+
+                  </div>
+                  <div class="navbar-end">
+                      <a href="/allAppointments" class="navbar-item{% ifequal page "allAppointments.html" %} is-active{%endifequal%}">Appointment history</a>
                   </div>
               </div>
           </div>

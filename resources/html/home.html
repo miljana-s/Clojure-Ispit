@@ -1,6 +1,31 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="content">
-  {{docs|markdown}}
+<div class=" alignCenter">
+  <div class="columns alignCenter" style="text-align: justify">
+    <img class="image is-128x128" src="/img/active-health-center.jpg" width="20px" height="20px">
+    <h1><b>ACTIVE HEALTH CENTER</b></h1>
   </div>
+  <div class="columns">
+    <div class="column">
+      <a class="button is-info" style="width: 300px" href="/patients"><p>Patients</p></a>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column">
+      <a class="button is-info" style="width: 300px" href="/appointments"><p>Appointments</p></a>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column">
+      <a class="button is-info" style="width: 300px" href="/treatments"><p>Treatments</p></a>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column">
+      <a class="button is-info" style="width: 300px" href="/allAppointments"><p>Appointments history</p></a>
+    </div>
+  </div>
+
+
+</div>
 {% endblock %}
