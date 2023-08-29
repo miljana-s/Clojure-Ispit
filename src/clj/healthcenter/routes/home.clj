@@ -12,7 +12,9 @@
   (layout/render request "home.html"))
 
 (defn patients-page [request]
-  (layout/render request "patients/patients.html"))
+  (layout/render
+    request "patients/patients.html"
+    {:patients (db/get-patients)}))
 
 (defn createPat-page [request]
   (layout/render request "patients/createPat.html"))
