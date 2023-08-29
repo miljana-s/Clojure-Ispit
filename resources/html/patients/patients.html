@@ -1,8 +1,43 @@
 {% extends "base.html" %}
 {% block content %}
 <div class=" alignCenter">
+    <div class="columns">
+        <div class="column" style="text-align: center">
+            <h1><b>PATIENTS</b></h1>
+            <br>
+            <table id="table" class="table is-bordered is-striped is-hoverable ">
+                <thead style="background-color: cornflowerblue">
+                <tr>
+                    <th>ID</th>
+                    <th>Card Number</th>
+                    <th>Full Name</th>
+                    <th>City</th>
+                    <th>Address</th>
+                    <th>Date of Birth</th>
+                    <th>Loyal Member</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                {% for item in patients %}
+                <tr>
+                    <td>{{item.idPatient}}</td>
+                    <td>{{item.healthCardNumber}}</td>
+                    <td>{{item.name}} {{item.surname}}</td>
+                    <td>{{item.city}}</td>
+                    <td>{{item.address}}</td>
+                    <td>{{item.dateOfBirth}}</td>
+                    <td>{{item.loyalityMember}}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
 
-    <p>This page works!</p>
+        <a href="/createPatient" style="margin: 10px;" class="button is-info">Create</a>
+        <a href="/updatePatient" style="margin: 10px;" class="button is-warning">Update</a>
+        <a href="/deletePatient" style="margin: 10px;" class="button is-danger">Delete</a>
+        </div>
+    </div>
 
 </div>
 {% endblock %}
