@@ -26,9 +26,21 @@ WHERE idPatient = :idPatient
 
 -- :name get-patients :? :*
 -- :doc shows all patients with number of appointments
-SELECT *, COUNT(appointments.idAppointment) AS 'numberOfApps' FROM `patients`
+SELECT *, COUNT(appointments.idAppointment) AS 'numberOfApps' FROM patients
     LEFT JOIN appointments ON appointments.idPatient1 = patients.idPatient
     GROUP BY patients.idPatient
+
+-- :name check-patient-treatments :? :1
+-- :doc returns a entity if patient had any treatments
+SELECT * FROM patients
+    JOIN appointments ON appointments.idPatient1 = patients.idPatient
+    WHERE idPatient = :id
+    GROUP BY patients.idPatient
+
+-- :name delete-patient! :! :n
+-- :doc delete patient with id
+DELETE FROM patients
+WHERE idPatient = :id
 
 ------------------- TREATMENTS --------------------------------
 
@@ -53,6 +65,11 @@ WHERE idTreatment = :idTreatment
 -- :name get-treatments :? :*s
 -- :doc shows all treatments
 SELECT * from treatments
+
+-- :name delete-treatment! :! :n
+-- :doc delete treatment with id
+DELETE FROM treatments
+WHERE idTreatment = :id
 
 ------------------- APPOINTMENTS --------------------------------
 
