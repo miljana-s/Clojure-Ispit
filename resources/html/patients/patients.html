@@ -5,7 +5,7 @@
         <div class="column" style="text-align: center">
             <h1><b>PATIENTS</b></h1>
             <br>
-            <table id="table" class="table is-bordered is-striped is-hoverable ">
+            <table id="table" class="table is-bordered is-striped">
                 <thead style="background-color: cornflowerblue">
                 <tr>
                     <th>ID</th>
@@ -19,7 +19,6 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
                 {% for item in patients %}
                 <tr>
                     <td>{{item.idpatient}}</td>
@@ -27,7 +26,7 @@
                     <td>{{item.name}} {{item.surname}}</td>
                     <td>{{item.city}}</td>
                     <td>{{item.address}}</td>
-                    <td>{{item.dateofbirth}} {{item.loyalitymember}}</td>
+                    <td>{{item.dateofbirth}}</td>
                     {% if item.loyalitymember = 1 %}
                     <td>True</td>
                     {% else %}

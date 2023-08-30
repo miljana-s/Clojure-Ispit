@@ -4,13 +4,25 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Health center Active</title>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bulma.min.js"></script>
 
-    <!-- styles -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bulma.min.css">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.css'>
+
+
+      <!-- styles -->
     {% style "/assets/bulma/css/bulma.min.css" %}
     {% style "/assets/material-icons/css/material-icons.min.css" %}
 
     {% style "/css/screen.css" %}
   </head>
+  <script>
+      $(document).ready(function () {
+          $('#table').DataTable();
+      });
+  </script>
   <body>
       <!-- navbar -->
       <nav class="navbar is-info">
@@ -39,7 +51,7 @@
       </nav>
 
       <section class="section">
-          <div class="container alignCenter content">
+          <div class="alignCenter content">
               {% block content %}
               {% endblock %}
           </div>
