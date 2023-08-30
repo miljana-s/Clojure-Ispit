@@ -40,6 +40,10 @@ body {
   text-align: center;
 }
 
+.alignLeft {
+  text-align: left;
+}
+
 .table {
   background-color: lavenderblush;
 }

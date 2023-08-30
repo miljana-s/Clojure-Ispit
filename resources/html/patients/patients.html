@@ -27,8 +27,8 @@
                     <td>{{item.name}} {{item.surname}}</td>
                     <td>{{item.city}}</td>
                     <td>{{item.address}}</td>
-                    <td>{{item.dateofbirth}}</td>
-                    {% if item.loyalitymember %}
+                    <td>{{item.dateofbirth}} {{item.loyalitymember}}</td>
+                    {% if item.loyalitymember = 1 %}
                     <td>True</td>
                     {% else %}
                     <td>False</td>

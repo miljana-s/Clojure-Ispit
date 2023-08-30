@@ -3,6 +3,7 @@
    [healthcenter.layout :as layout]
    [healthcenter.db.core :as db]
    [clojure.java.io :as io]
+   [struct.core :as st]
    [healthcenter.middleware :as middleware]
    [ring.util.response]
    [ring.util.http-response :as response]))
@@ -16,8 +17,10 @@
     request "patients/patients.html"
     {:patients (db/get-patients)}))
 
-(defn createPat-page [request]
-  (layout/render request "patients/createPat.html"))
+(defn createPat-page [{:keys [flash] :as request}]
+  (layout/render
+    request "patients/createPat.html"
+    (select-keys flash [:name :surname :healthCardNumber :city :address :dateOfBirth :errors])))
 
 (defn updatePat-page [request]
   (layout/render request "patients/updatePat.html"))
@@ -57,15 +60,48 @@
 
 ;-------------------------- SCHEMAS -----------------------------------------
 
-
+;Adding patient
+(def addPatient-schema
+  [[:name
+    st/required
+    st/string]
+   [:surname
+    st/required
+    st/string]
+   [:healthCardNumber
+    st/required
+    {:message  "Card number must be positive number!"
+     :validate (fn [num] (> (Integer/parseInt (re-find #"\A-?\d+" num)) 0))}]
+   [:city
+    st/required
+    st/string]
+   [:address
+    st/required
+    st/string]
+   [:dateOfBirth
+    st/required]])
 
 
 ;-------------------------- VALIDATIONS -----------------------------------------
 
+;Add patient
+(defn validate-addPatient [params]
+  (first (st/validate params addPatient-schema)))
 
 ;-------------------------- METHODS -----------------------------------------
 
-
+;Adding new patient
+(defn add-patient! [{:keys [params]}]
+  (if-let [errors (validate-addPatient params)]
+    (-> (response/found "/createPatient")
+        (assoc :flash (assoc params :errors errors)))
+    (let [patient (db/get-patient-by-card params)]
+      (if patient
+        (-> (response/found "/createPatient")
+            (assoc :flash (assoc params :errors {:healthCardNumber "Patient with that health card number already exists!!"})))
+        (do
+          (db/create-patient! params)
+          (response/found "/patients"))))))
 
 ;-------------------------- ROUTING -----------------------------------------
 
@@ -75,7 +111,7 @@
                  middleware/wrap-formats]}
 
    ; ---------- POST REQ ------------------------
-
+   ["/addPatient" {:post add-patient!}]
 
    ; ---------- GET REQ ------------------------
    ["/" {:get home-page}]

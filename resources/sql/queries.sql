@@ -6,10 +6,15 @@ INSERT INTO patients
 (healthCardNumber, name, surname, city, address, dateOfBirth, loyalityMember)
 VALUES (:healthCardNumber, :name, :surname, :city, :address, :dateOfBirth, :loyalityMember)
 
--- :name get-user-by-id :? :1
+-- :name get-patient-by-id :? :1
 -- :doc get patient by id
 SELECT * FROM patients
 WHERE idPatient = :idPatient
+
+-- :name get-patient-by-card :? :1
+-- :doc get patient by card
+SELECT * FROM patients
+WHERE healthCardNumber = :healthCardNumber
 
 -- :name update-patient! :! :n
 -- :doc update existing patient with id
@@ -22,7 +27,8 @@ WHERE idPatient = :idPatient
 -- :name get-patients :? :*
 -- :doc shows all patients with number of appointments
 SELECT *, COUNT(appointments.idAppointment) AS 'numberOfApps' FROM `patients`
-    JOIN appointments ON appointments.idPatient = patients.idPatient
+    LEFT JOIN appointments ON appointments.idPatient1 = patients.idPatient
+    GROUP BY patients.idPatient
 
 ------------------- TREATMENTS --------------------------------
 
@@ -44,7 +50,7 @@ SET treatmentName = :treatmentName, regularPrice = :regularPrice,
     loyalityPrice = :loyalityPrice
 WHERE idTreatment = :idTreatment
 
--- :name get-treatments :? :*
+-- :name get-treatments :? :*s
 -- :doc shows all treatments
 SELECT * from treatments
 
@@ -76,14 +82,14 @@ WHERE idAppointment = :idAppointment
 -- :name get-appointments :? :*
 -- :doc shows all appointments
 SELECT * from appointments
-                  JOIN treatments ON appointments.idTreatment = treatments.idTreatment
-                  JOIN patients ON appointments.idPatient = patients.idPatient
+                  JOIN treatments ON appointments.idTreatment1 = treatments.idTreatment
+                  JOIN patients ON appointments.idPatient1 = patients.idPatient
 ORDER BY idAppointment ASC
 
 -- :name get-appointments-by-patient :? :*
 -- :doc shows all appointments that patient with id had
 SELECT *FROM appointments
-                 JOIN treatments ON appointments.idTreatment = treatments.idTreatment
-                 JOIN patients ON appointments.idPatient = patients.idPatient
+                 JOIN treatments ON appointments.idTreatment1 = treatments.idTreatment
+                 JOIN patients ON appointments.idPatient1 = patients.idPatient
 WHERE appointments.idPatient = :idPatient
 ORDER BY idAppointment ASC
