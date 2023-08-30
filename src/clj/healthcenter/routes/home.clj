@@ -22,8 +22,11 @@
     request "patients/createPat.html"
     (select-keys flash [:name :surname :healthCardNumber :city :address :dateOfBirth :errors])))
 
-(defn updatePat-page [request]
-  (layout/render request "patients/updatePat.html"))
+(defn updatePat-page [{:keys [flash] :as request}]
+  (layout/render
+    request "patients/updatePat.html"
+    (merge {:patients (db/get-patients)}
+           (select-keys flash [:name :surname :healthCardNumber :city :address :dateOfBirth :errors]))))
 
 (defn deletePat-page [request]
   (layout/render request "patients/deletePat.html"))
@@ -61,7 +64,7 @@
 ;-------------------------- SCHEMAS -----------------------------------------
 
 ;Adding patient
-(def addPatient-schema
+(def patient-schema
   [[:name
     st/required
     st/string]
@@ -85,14 +88,14 @@
 ;-------------------------- VALIDATIONS -----------------------------------------
 
 ;Add patient
-(defn validate-addPatient [params]
-  (first (st/validate params addPatient-schema)))
+(defn validate-patient [params]
+  (first (st/validate params patient-schema)))
 
 ;-------------------------- METHODS -----------------------------------------
 
 ;Adding new patient
 (defn add-patient! [{:keys [params]}]
-  (if-let [errors (validate-addPatient params)]
+  (if-let [errors (validate-patient params)]
     (-> (response/found "/createPatient")
         (assoc :flash (assoc params :errors errors)))
     (let [patient (db/get-patient-by-card params)]
@@ -101,6 +104,20 @@
             (assoc :flash (assoc params :errors {:healthCardNumber "Patient with that health card number already exists!!"})))
         (do
           (db/create-patient! params)
+          (response/found "/patients"))))))
+
+;Update patient
+(defn update-patient! [{:keys [params]}]
+  (if-let [errors (validate-patient params)]
+    (-> (response/found "/updatePatient")
+        (assoc :flash (assoc params :errors errors)))
+    (let [patient (db/get-patient-by-card params)]
+      (if patient
+        (-> (response/found "/updatePatient")
+            (assoc :flash (assoc params :errors {:healthCardNumber "Patient with that health card number already exists!!"})))
+        (do
+          (println params)
+          (db/update-patient! params)
           (response/found "/patients"))))))
 
 ;-------------------------- ROUTING -----------------------------------------
@@ -112,14 +129,15 @@
 
    ; ---------- POST REQ ------------------------
    ["/addPatient" {:post add-patient!}]
+   ["/editPatient" {:post update-patient!}]
 
    ; ---------- GET REQ ------------------------
    ["/" {:get home-page}]
 
    ["/patients" {:get patients-page}]
    ["/createPatient" {:get createPat-page}]
-   ["/updatePatient" {:get updateApp-page}]
-   ["/deletePatient" {:get deleteApp-page}]
+   ["/updatePatient" {:get updatePat-page}]
+   ["/deletePatient" {:get deletePat-page}]
 
    ["/treatments" {:get treatments-page}]
    ["/createTreatment" {:get createTreat-page}]

@@ -1,8 +1,98 @@
-{% extends "base.html" %}
-{% block content %}
-<div class=" alignCenter">
+{% extends "base.html" %} {% block content %}
+<h1>
+    <b>ADD PATIENT</b>
+</h1>
+<form method="POST" action="/editPatient">
+    <div class="columns">
+        <div class="column ">
+            <div class="field">
+                <label class="label" for="idPatient">
+                    Choose patient
+                </label>
+                <select class="input" name="idPatient" id="idPatient">
+                    {% for item in patients %}
+                    <option value={{item.idpatient}}>{{item.name}} {{item.surname}} - {{item.healthcardnumber}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="columns">
+        {% csrf-field %}
 
-    <p>This page works!</p>
+        <div class="column ">
+            <div class="field">
+                <label class="label" for="name"> Name </label>
+                {% if errors.name %}
+                <div class="notification is-danger">
+                    {{errors.name|join}}
+                </div>
+                {% endif %}
+                <input class="input" type="text" id="name" name="name" value="{{name}}" />
+            </div>
+            <div class="field">
+                <label class="label" for="surname"> Surname </label>
+                {% if errors.surname %}
+                <div class="notification is-danger">
+                    {{errors.surname|join}}
+                </div>
+                {% endif %}
+                <input class="input" type="text" id="surname" name="surname" value="{{surname}}" />
+            </div>
+            <div class="field">
+                <label class="label" for="healthCardNumber"> Health Card Number </label>
+                {% if errors.healthCardNumber %}
+                <div class="notification is-danger">
+                    {{errors.healthCardNumber|join}}
+                </div>
+                {% endif %}
+                <input class="input" type="number" id="healthCardNumber" name="healthCardNumber" value="{{healthCardNumber}}" />
+            </div>
+        </div>
+        <div class="column">
+            <div class="field">
+                <label class="label" for="city"> City </label>
+                {% if errors.city %}
+                <div class="notification is-danger">
+                    {{errors.city|join}}
+                </div>
+                {% endif %}
+                <input class="input" type="text" id="city" name="city" value="{{city}}" />
+            </div>
+            <div class="field">
+                <label class="label" for="address"> Address </label>
+                {% if errors.address %}
+                <div class="notification is-danger">
+                    {{errors.address|join}}
+                </div>
+                {% endif %}
+                <input class="input" type="text" id="address" name="address" value="{{address}}" />
+            </div>
+            <div class="field">
+                <label class="label"> Loyality member </label>
+                <div class="alignLeft">
+                    <input type="radio" id="loyal1" name="loyalityMember" value="1" checked>
+                    <label for="loyal1">Yes</label><br>
+                    <input type="radio" id="loyal0" name="loyalityMember" value="0">
+                    <label for="loyal0">No</label><br>
+                </div>
+            </div>
 
-</div>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column">
+            <div class="field">
+                <label class="label" for="dateOfBirth"> Date of birth </label>
+                {% if errors.dateOfBirth %}
+                <div class="notification is-danger">
+                    {{errors.dateOfBirth|join}}
+                </div>
+                {% endif %}
+                <input class="input" type="date" id="dateOfBirth" name="dateOfBirth" value="{{dateOfBirth}}" />
+            </div>
+            <input type="submit" class="button is-primary" value="Add patient" />
+        </div>
+    </div>
+</form>
 {% endblock %}
