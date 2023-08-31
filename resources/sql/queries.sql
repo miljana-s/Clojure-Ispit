@@ -133,3 +133,8 @@ SELECT *FROM appointments
                  JOIN patients ON appointments.idPatient1 = patients.idPatient
 WHERE appointments.idPatient = :idPatient
 ORDER BY idAppointment ASC
+
+-- :name get-appointment-by-time-and-date :? :1
+-- :doc selects appointment by time and date
+SELECT * FROM appointments
+WHERE time = :time AND date = :date

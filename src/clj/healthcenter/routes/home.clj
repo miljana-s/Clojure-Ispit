@@ -213,20 +213,26 @@
         (db/delete-treatment! params)
         (response/found "/treatments")))))
 
-;Adding new appointment
+
+; Adding new appointment
 (defn add-appointment! [{:keys [params]}]
   (if-let [errors (validate-appointment params)]
     (-> (response/found "/createAppointment")
         (assoc :flash (assoc params :errors errors)))
-    (let [loyality (db/get-patient-loyality params)]
-      (if (= loyality 1)
-        (do
-          (db/create-loyal-appointment! params)
-          (response/found "/appointments"))
-        (do
-          (db/create-regular-appointment! params)
-          (response/found "/appointments"))
-          ))))
+    (let [appointment (db/get-appointment-by-time-and-date params)]
+      (if appointment
+        (-> (response/found "/createAppointment")
+            (assoc :flash (assoc params :errors {:date "This time and date are already booked!!"})))
+        (let [loyality (db/get-patient-loyality params)]
+          (if (= loyality 1)
+            (do
+              (db/create-loyal-appointment! params)
+              (response/found "/appointments"))
+            (do
+              (db/create-regular-appointment! params)
+              (response/found "/appointments"))))))))
+
+
 
 
 ;-------------------------- ROUTING -----------------------------------------
