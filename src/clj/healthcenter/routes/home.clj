@@ -44,8 +44,11 @@
     request "treatments/createTreat.html"
     (select-keys flash [:treatmentName :regularPrice :loyalityPrice :errors])))
 
-(defn updateTreat-page [request]
-  (layout/render request "treatments/updateTreat.html"))
+(defn updateTreat-page [{:keys [flash] :as request}]
+  (layout/render
+    request "treatments/updateTreat.html"
+    (merge {:treatments (db/get-treatments)}
+           (select-keys flash [:treatmentName :regularPrice :loyalityPrice :errors]))))
 
 (defn deleteTreat-page [request]
   (layout/render request "treatments/deleteTreat.html"))
@@ -107,11 +110,6 @@
     {:message  "Price must be positive number!"
      :validate (fn [num] (> (Integer/parseInt (re-find #"\A-?\d+" num)) 0))}]])
 
-;Delete universal
-(def delete-schema
-  [[:id
-    st/required]])
-
 
 ;-------------------------- VALIDATIONS -----------------------------------------
 
@@ -122,8 +120,6 @@
 ;Treatment
 (defn validate-treatment [params]
   (first (st/validate params treatment-schema)))
-
-;Delete
 
 
 
@@ -175,6 +171,16 @@
       (db/create-treatment! params)
       (response/found "/treatments"))))
 
+;Update treatment
+(defn update-treatment! [{:keys [params]}]
+  (if-let [errors (validate-treatment params)]
+    (-> (response/found "/updateTreatment")
+        (assoc :flash (assoc params :errors errors)))
+    (do
+      (println params)
+      (db/update-treatment! params)
+      (response/found "/treatments"))))
+
 ;-------------------------- ROUTING -----------------------------------------
 
 (defn home-routes []
@@ -188,6 +194,7 @@
    ["/removePatient" {:post delete-patient!}]
 
    ["/addTreatment" {:post add-treatment!}]
+   ["/editTreatment" {:post update-treatment!}]
 
    ; ---------- GET REQ ------------------------
    ["/" {:get home-page}]
