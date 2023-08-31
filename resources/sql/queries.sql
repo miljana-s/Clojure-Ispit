@@ -42,6 +42,11 @@ SELECT * FROM patients
 DELETE FROM patients
 WHERE idPatient = :id
 
+-- :name get-patient-loyality :? :1
+-- :doc returns if patient is loyalityMember
+SELECT loyalityMember FROM patients
+    WHERE idPatient = :idPatient
+
 ------------------- TREATMENTS --------------------------------
 
 -- :name create-treatment! :! :n
@@ -83,11 +88,19 @@ WHERE idTreatment = :id
 
 ------------------- APPOINTMENTS --------------------------------
 
--- :name create-appointment! :! :n
+-- :name create-loyal-appointment! :! :n
 -- :doc creates a new appointment record
     INSERT INTO appointments
-(idPatient, idTreatment, date, time, price)
-VALUES (:patient, :treatment, :date, :time, :price)
+(idPatient1, idTreatment1, date, time, price)
+VALUES (:idPatient, :idTreatment, :date, :time, (
+    SELECT loyalityPrice FROM treatments WHERE idTreatment = :idTreatment))
+
+-- :name create-regular-appointment! :! :n
+-- :doc creates a new appointment record
+INSERT INTO appointments
+(idPatient1, idTreatment1, date, time, price)
+VALUES (:idPatient, :idTreatment, :date, :time, (
+    SELECT regularPrice FROM treatments WHERE idTreatment = :idTreatment))
 
 -- :name get-appointment-by-id :? :1
 -- :doc selects appointment by id

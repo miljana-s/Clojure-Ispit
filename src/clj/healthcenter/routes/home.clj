@@ -61,8 +61,12 @@
     request "appointments/appointments.html"
     {:appointments (db/get-appointments)}))
 
-(defn createApp-page [request]
-  (layout/render request "appointments/createApp.html"))
+(defn createApp-page [{:keys [flash] :as request}]
+  (layout/render
+    request "appointments/createApp.html"
+    (merge {:patients (db/get-patients)}
+           {:treatments (db/get-treatments)}
+           (select-keys flash [:time :date :errors]))))
 
 (defn updateApp-page [request]
   (layout/render request "appointments/updateApp.html"))
@@ -78,7 +82,7 @@
 
 ;-------------------------- SCHEMAS -----------------------------------------
 
-;Adding patient
+;Patient
 (def patient-schema
   [[:name
     st/required
@@ -101,7 +105,7 @@
    [:dateOfBirth
     st/required]])
 
-;Adding patient
+;Treatment
 (def treatment-schema
   [[:treatmentName
     st/required
@@ -115,6 +119,13 @@
     {:message  "Price must be positive number!"
      :validate (fn [num] (> (Integer/parseInt (re-find #"\A-?\d+" num)) 0))}]])
 
+;Appointment
+(def appointment-schema
+  [[:date
+    st/required]
+   [:time
+    st/required]])
+
 
 ;-------------------------- VALIDATIONS -----------------------------------------
 
@@ -125,6 +136,10 @@
 ;Treatment
 (defn validate-treatment [params]
   (first (st/validate params treatment-schema)))
+
+;Appointment
+(defn validate-appointment [params]
+  (first (st/validate params appointment-schema)))
 
 
 
@@ -198,6 +213,22 @@
         (db/delete-treatment! params)
         (response/found "/treatments")))))
 
+;Adding new appointment
+(defn add-appointment! [{:keys [params]}]
+  (if-let [errors (validate-appointment params)]
+    (-> (response/found "/createAppointment")
+        (assoc :flash (assoc params :errors errors)))
+    (let [loyality (db/get-patient-loyality params)]
+      (if (= loyality 1)
+        (do
+          (db/create-loyal-appointment! params)
+          (response/found "/appointments"))
+        (do
+          (db/create-regular-appointment! params)
+          (response/found "/appointments"))
+          ))))
+
+
 ;-------------------------- ROUTING -----------------------------------------
 
 (defn home-routes []
@@ -213,6 +244,8 @@
    ["/addTreatment" {:post add-treatment!}]
    ["/editTreatment" {:post update-treatment!}]
    ["/removeTreatment" {:post delete-treatment!}]
+
+   ["/addAppointment" {:post add-appointment!}]
 
    ; ---------- GET REQ ------------------------
    ["/" {:get home-page}]

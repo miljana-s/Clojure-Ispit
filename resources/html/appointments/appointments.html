@@ -8,6 +8,7 @@
             <table id="table" class="table is-bordered is-striped">
                 <thead style="background-color: cornflowerblue">
                 <tr>
+                    <th>#</th>
                     <th>Patient Card No.</th>
                     <th>Full Name</th>
                     <th>Treatment</th>
@@ -19,6 +20,7 @@
                 <tbody>
                 {% for item in appointments %}
                 <tr>
+                    <td>{{item.idappointment}}</td>
                     <td>{{item.healthcardnumber}}</td>
                     <td>{{item.name}} {{item.surname}}</td>
                     <td>{{item.treatmentname}}</td>
@@ -33,6 +35,7 @@
             <a href="/createAppointment" style="margin: 10px;" class="button is-info">Create</a>
             <a href="/updateAppointment" style="margin: 10px;" class="button is-warning">Update</a>
             <a href="/deleteAppointment" style="margin: 10px;" class="button is-danger">Delete</a>
+            <a href="/addDoctorReport" style="margin: 10px;" class="button is-success">Complete ✅</a>
         </div>
     </div>
 

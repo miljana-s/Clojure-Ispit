@@ -1,8 +1,62 @@
-{% extends "base.html" %}
-{% block content %}
-<div class=" alignCenter">
+{% extends "base.html" %} {% block content %}
+<h1>
+    <b>ADD APPOINTMENT</b>
+</h1>
+<form method="POST" action="/addAppointment">
+    <div class="columns">
+        <div class="column ">
+            <div class="field">
+                <label class="label" for="idPatient">
+                    Choose patient
+                </label>
+                <select class="input" name="idPatient" id="idPatient">
+                    {% for item in patients %}
+                    <option value={{item.idpatient}}>{{item.name}} {{item.surname}} - {{item.healthcardnumber}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="field">
+                <label class="label" for="idTreatment">
+                    Choose treatment
+                </label>
+                <select class="input" name="idTreatment" id="idTreatment">
+                    {% for item in treatments %}
+                    <option value={{item.idtreatment}}>{{item.treatmentname}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="columns">
+        {% csrf-field %}
 
-    <p>This page works!</p>
-
-</div>
+        <div class="column ">
+            <div class="field">
+                <label class="label" for="date"> Date </label>
+                {% if errors.date %}
+                <div class="notification is-danger">
+                    {{errors.date|join}}
+                </div>
+                {% endif %}
+                <input class="input" type="date" id="date" name="date" value="{{date}}" />
+            </div>
+        </div>
+        <div class="column">
+            <div class="field">
+                <label class="label" for="time"> Time </label>
+                {% if errors.time %}
+                <div class="notification is-danger">
+                    {{errors.time|join}}
+                </div>
+                {% endif %}
+                <input class="input" type="time" id="time" name="time" value="{{time}}" />
+            </div>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column">
+            <input type="submit" class="button is-primary" value="Add patient" />
+        </div>
+    </div>
+</form>
 {% endblock %}
