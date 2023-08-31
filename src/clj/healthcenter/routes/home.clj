@@ -50,8 +50,11 @@
     (merge {:treatments (db/get-treatments)}
            (select-keys flash [:treatmentName :regularPrice :loyalityPrice :errors]))))
 
-(defn deleteTreat-page [request]
-  (layout/render request "treatments/deleteTreat.html"))
+(defn deleteTreat-page [{:keys [flash] :as request}]
+  (layout/render
+    request "treatments/deleteTreat.html"
+    (merge {:treatments (db/get-treatments)}
+           (select-keys flash [:id :errors]))))
 
 (defn appointments-page [request]
   (layout/render request "appointments/appointments.html"))
@@ -181,6 +184,18 @@
       (db/update-treatment! params)
       (response/found "/treatments"))))
 
+;Delete treatment
+(defn delete-treatment! [{:keys [params]}]
+  (let [params-no-token (dissoc params :__anti-forgery-token)
+        treatment (db/check-treatment-patients params-no-token)]
+    (if treatment
+      (-> (response/found "/deleteTreatment")
+          (assoc :flash (assoc params :errors {:id "You can't delete treatment that has patient record!!"})))
+      (do
+        (println params)
+        (db/delete-treatment! params)
+        (response/found "/treatments")))))
+
 ;-------------------------- ROUTING -----------------------------------------
 
 (defn home-routes []
@@ -195,6 +210,7 @@
 
    ["/addTreatment" {:post add-treatment!}]
    ["/editTreatment" {:post update-treatment!}]
+   ["/removeTreatment" {:post delete-treatment!}]
 
    ; ---------- GET REQ ------------------------
    ["/" {:get home-page}]

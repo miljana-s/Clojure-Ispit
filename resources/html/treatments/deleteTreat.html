@@ -1,8 +1,31 @@
-{% extends "base.html" %}
-{% block content %}
-<div class=" alignCenter">
+{% extends "base.html" %} {% block content %}
+<h1>
+    <b>REMOVE TREATMENT</b>
+</h1>
 
-    <p>This page works!</p>
-
+<div class="columns">
+    <div class="column ">
+        <form method="POST" action="/removeTreatment">
+            {% csrf-field %}
+            <div class="field">
+                <label class="label" for="id">
+                    Choose treatment
+                </label>
+                {% if errors.id %}
+                <div class="notification is-danger">
+                    {{errors.id|join}}
+                </div>
+                {% endif %}
+                <select class="input" name="id" id="id" st>
+                    {% for item in treatments %}
+                    <option value={{item.idtreatment}}>{{item.treatmentname}} -> {{item.regularprice}}RSD / {{item.loyalityprice}}RSD</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <input type="submit" class="button is-primary" value="Remove treatment" />
+        </form>
+    </div>
 </div>
+
+
 {% endblock %}
