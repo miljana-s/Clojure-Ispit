@@ -1,8 +1,40 @@
 {% extends "base.html" %}
 {% block content %}
 <div class=" alignCenter">
+    <div class="columns">
+        <div class="column" style="text-align: center">
+            <h1><b>APPOINTMENTS</b></h1>
+            <br>
+            <table id="table" class="table is-bordered is-striped">
+                <thead style="background-color: cornflowerblue">
+                <tr>
+                    <th>Patient Card No.</th>
+                    <th>Full Name</th>
+                    <th>Treatment</th>
+                    <th>Time</th>
+                    <th>Date</th>
+                    <th>Price</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in appointments %}
+                <tr>
+                    <td>{{item.healthcardnumber}}</td>
+                    <td>{{item.name}} {{item.surname}}</td>
+                    <td>{{item.treatmentname}}</td>
+                    <td>{{item.time}}</td>
+                    <td>{{item.date}}</td>
+                    <td>{{item.price}} RSD</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
 
-    <p>This page works!</p>
+            <a href="/createAppointment" style="margin: 10px;" class="button is-info">Create</a>
+            <a href="/updateAppointment" style="margin: 10px;" class="button is-warning">Update</a>
+            <a href="/deleteAppointment" style="margin: 10px;" class="button is-danger">Delete</a>
+        </div>
+    </div>
 
 </div>
 {% endblock %}

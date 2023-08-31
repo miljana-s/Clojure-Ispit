@@ -8,7 +8,6 @@
             <table id="table" class="table is-bordered is-striped">
                 <thead style="background-color: cornflowerblue">
                 <tr>
-                    <th>ID</th>
                     <th>Card Number</th>
                     <th>Full Name</th>
                     <th>City</th>
@@ -21,7 +20,6 @@
                 <tbody>
                 {% for item in patients %}
                 <tr>
-                    <td>{{item.idpatient}}</td>
                     <td>{{item.healthcardnumber}}</td>
                     <td>{{item.name}} {{item.surname}}</td>
                     <td>{{item.city}}</td>

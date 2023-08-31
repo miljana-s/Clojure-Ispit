@@ -57,7 +57,9 @@
            (select-keys flash [:id :errors]))))
 
 (defn appointments-page [request]
-  (layout/render request "appointments/appointments.html"))
+  (layout/render
+    request "appointments/appointments.html"
+    {:appointments (db/get-appointments)}))
 
 (defn createApp-page [request]
   (layout/render request "appointments/createApp.html"))
