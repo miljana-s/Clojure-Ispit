@@ -1,8 +1,36 @@
 {% extends "base.html" %}
 {% block content %}
 <div class=" alignCenter">
+    <div class="columns">
+        <div class="column" style="text-align: center">
+            <h1><b>TREATMENTS</b></h1>
+            <br>
+            <table id="table" class="table is-bordered is-striped">
+                <thead style="background-color: cornflowerblue">
+                <tr>
+                    <th>ID</th>
+                    <th>Treatment</th>
+                    <th>Price</th>
+                    <th>Discount price</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in treatments %}
+                <tr>
+                    <td>{{item.idtreatment}}</td>
+                    <td>{{item.treatmentname}}</td>
+                    <td>{{item.regularprice}} RSD</td>
+                    <td>{{item.loyalityprice}} RSD</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
 
-    <p>This page works!</p>
+            <a href="/createTreatment" style="margin: 10px;" class="button is-info">Create</a>
+            <a href="/updateTreatment" style="margin: 10px;" class="button is-warning">Update</a>
+            <a href="/deleteTreatment" style="margin: 10px;" class="button is-danger">Delete</a>
+        </div>
+    </div>
 
 </div>
 {% endblock %}

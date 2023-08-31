@@ -1,0 +1,52 @@
+{% extends "base.html" %} {% block content %}
+<h1>
+    <b>ADD TREATMENT</b>
+</h1>
+<form method="POST" action="/addTreatment">
+    {% csrf-field %}
+    <div class="columns">
+        <div class="column ">
+            <div class="field">
+                <label class="label" for="treatmentName">
+                    Treatment name
+                </label>
+                {% if errors.treatmentName %}
+                <div class="notification is-danger">
+                    {{errors.treatmentName|join}}
+                </div>
+                {% endif %}
+                <input class="input" type="text" id="treatmentName" name="treatmentName" value="{{treatmentName}}" />
+            </div>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column ">
+            <div class="field">
+                <label class="label" for="regularPrice"> Regular price </label>
+                {% if errors.regularPrice %}
+                <div class="notification is-danger">
+                    {{errors.regularPrice|join}}
+                </div>
+                {% endif %}
+                <input class="input" type="number" id="regularPrice" name="regularPrice" value="{{regularPrice}}" />
+            </div>
+        </div>
+        <div class="column">
+            <div class="field">
+                <label class="label" for="loyalityPrice"> Surname </label>
+                {% if errors.loyalityPrice %}
+                <div class="notification is-danger">
+                    {{errors.loyalityPrice|join}}
+                </div>
+                {% endif %}
+                <input class="input" type="number" id="loyalityPrice" name="loyalityPrice" value="{{loyalityPrice}}" />
+            </div>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column">
+            <input type="submit" class="button is-primary" value="Add treatment" />
+        </div>
+    </div>
+</form>
+{% endblock %}
