@@ -107,11 +107,20 @@ VALUES (:idPatient, :idTreatment, :date, :time, (
 SELECT * FROM appointments
 WHERE idAppointment = :idAppointment
 
--- :name update-appointment! :! :n
--- :doc update existing appointment with id
+-- :name update-loyal-appointment! :! :n
+-- :doc creates a new appointment record
 UPDATE appointments
-SET idPatient = :idPatient, idTreatment = :idTreatment,
-    date = :date, time = :time, price = :price
+SET idPatient1 = :idPatient, idTreatment1 = :idTreatment,
+    date = :date, time = :time, price = (
+    SELECT loyalityPrice FROM treatments WHERE idTreatment = :idTreatment)
+WHERE idAppointment = :idAppointment
+
+-- :name update-regular-appointment! :! :n
+-- :doc creates a new appointment record
+UPDATE appointments
+SET idPatient1 = :idPatient, idTreatment1 = :idTreatment,
+    date = :date, time = :time, price = (
+    SELECT regularPrice FROM treatments WHERE idTreatment = :idTreatment)
 WHERE idAppointment = :idAppointment
 
 -- :name delete-appointment! :! :n

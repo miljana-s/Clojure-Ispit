@@ -68,8 +68,13 @@
            {:treatments (db/get-treatments)}
            (select-keys flash [:time :date :errors]))))
 
-(defn updateApp-page [request]
-  (layout/render request "appointments/updateApp.html"))
+(defn updateApp-page [{:keys [flash] :as request}]
+  (layout/render
+    request "appointments/updateApp.html"
+    (merge {:appointments (db/get-appointments)}
+           {:patients (db/get-patients)}
+           {:treatments (db/get-treatments)}
+           (select-keys flash [:time :date :errors]))))
 
 (defn deleteApp-page [request]
   (layout/render request "appointments/deleteApp.html"))
@@ -140,8 +145,6 @@
 ;Appointment
 (defn validate-appointment [params]
   (first (st/validate params appointment-schema)))
-
-
 
 ;-------------------------- METHODS -----------------------------------------
 
@@ -232,6 +235,24 @@
               (db/create-regular-appointment! params)
               (response/found "/appointments"))))))))
 
+; Update appointment
+(defn update-appointment! [{:keys [params]}]
+  (if-let [errors (validate-appointment params)]
+    (-> (response/found "/updateAppointment")
+        (assoc :flash (assoc params :errors errors)))
+    (let [appointment (db/get-appointment-by-time-and-date params)]
+      (if appointment
+        (-> (response/found "/updateAppointment")
+            (assoc :flash (assoc params :errors {:date "This time and date are already booked!!"})))
+        (let [loyality (db/get-patient-loyality params)]
+          (if (= loyality 1)
+            (do
+              (db/update-loyal-appointment! params)
+              (response/found "/appointments"))
+            (do
+              (db/update-regular-appointment! params)
+              (response/found "/appointments"))))))))
+
 
 
 
@@ -252,6 +273,7 @@
    ["/removeTreatment" {:post delete-treatment!}]
 
    ["/addAppointment" {:post add-appointment!}]
+   ["/editAppointment" {:post update-appointment!}]
 
    ; ---------- GET REQ ------------------------
    ["/" {:get home-page}]
