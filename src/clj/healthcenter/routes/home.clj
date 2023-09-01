@@ -84,10 +84,15 @@
 (defn completedApps-page [request]
   (layout/render
     request "appointments/completedApps.html"
-    {:appointments (db/get-completed-appointments)}))
+    (merge {:appointments (db/get-completed-appointments)}
+           {:earnings (db/get-appointments-sum)})))
 
-(defn doctorReport-page [request]
-  (layout/render request "appointments/doctorReport.html"))
+(defn doctorReport-page [{:keys [flash] :as request}]
+  (layout/render
+    request "appointments/doctorReport.html"
+    (merge {:appointments (db/get-appointments)}
+           (println (db/get-appointments))
+           (select-keys flash [:doctorReport :errors]))))
 
 ;-------------------------- SCHEMAS -----------------------------------------
 
@@ -135,6 +140,11 @@
    [:time
     st/required]])
 
+;Report
+(def report-schema
+  [[:doctorReport
+    st/required]])
+
 
 ;-------------------------- VALIDATIONS -----------------------------------------
 
@@ -149,6 +159,10 @@
 ;Appointment
 (defn validate-appointment [params]
   (first (st/validate params appointment-schema)))
+
+;Appointment
+(defn validate-report [params]
+  (first (st/validate params report-schema)))
 
 ;-------------------------- METHODS -----------------------------------------
 
@@ -262,6 +276,17 @@
   (db/delete-appointment! params)
   (response/found "/appointments"))
 
+;Adding report
+(defn add-doctorReport [{:keys [params]}]
+  (if-let [errors (validate-report params)]
+    (-> (response/found "/addDoctorReport")
+        (assoc :flash (assoc params :errors errors)))
+    (do
+      (db/complete-appointment params)
+      (response/found "/appointmentHistory"))))
+
+
+
 
 ;-------------------------- ROUTING -----------------------------------------
 
@@ -282,6 +307,8 @@
    ["/addAppointment" {:post add-appointment!}]
    ["/editAppointment" {:post update-appointment!}]
    ["/removeAppointment" {:post delete-appointment!}]
+
+   ["/completeAppointment" {:post add-doctorReport}]
 
    ; ---------- GET REQ ------------------------
    ["/" {:get home-page}]

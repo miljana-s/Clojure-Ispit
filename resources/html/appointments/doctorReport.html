@@ -1,8 +1,35 @@
-{% extends "base.html" %}
-{% block content %}
-<div class=" alignCenter">
+{% extends "base.html" %} {% block content %}
+<h1>
+  <b>COMPLETE APPOINTMENT</b>
+</h1>
 
-  <p>This page works!</p>
-
+<div class="columns">
+  <div class="column ">
+    <form method="POST" action="/completeAppointment">
+      {% csrf-field %}
+      <div class="field">
+        <label class="label" for="idAppointment">
+          Choose appointment
+        </label>
+        </div>
+        <select class="input" name="idAppointment" id="idAppointment">
+          {% for item in appointments %}
+          <option value={{item.idappointment}}>{{item.idappointment}} | {{item.treatmentname}} - {{item.name}} {{item.surname}} - {{item.date}}/ {{item.time}}h</option>
+          {% endfor %}
+        </select>
+      <div class="field">
+        <label class="label" for="doctorReport"> Doctor report</label>
+        {% if errors.doctorReport %}
+        <div class="notification is-danger">
+          {{errors.doctorReport|join}}
+        </div>
+        {% endif %}
+        <textarea class="textarea" id="doctorReport" name="doctorReport" rows="5" cols="60" placeholder="Insert doctor report here..."></textarea>
+      </div>
+      <input type="submit" class="button is-primary" value="Complete appointment" />
+    </form>
+  </div>
 </div>
-{% endblocks %}
+
+
+{% endblock %}

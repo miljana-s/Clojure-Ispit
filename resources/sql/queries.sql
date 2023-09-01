@@ -14,7 +14,7 @@ WHERE idPatient = :idPatient
 -- :name get-patient-by-card :? :1
 -- :doc get patient by card
 SELECT * FROM patients
-WHERE healthCardNumber = :healthCardNumber
+WHERE healthCardNumber = :healthCardNumber AND idPatient != :idPatient
 
 -- :name update-patient! :! :n
 -- :doc update existing patient with id
@@ -67,7 +67,7 @@ SET treatmentName = :treatmentName, regularPrice = :regularPrice,
     loyalityPrice = :loyalityPrice
 WHERE idTreatment = :idTreatment
 
--- :name get-treatments :? :*s
+-- :name get-treatments :? :*
 -- :doc shows all treatments
 SELECT *, COUNT(appointments.idAppointment) AS 'numberOfApps' FROM treatments
         LEFT JOIN appointments ON appointments.idTreatment1 = treatments.idTreatment
@@ -158,3 +158,15 @@ SELECT * from appointments
                   JOIN patients ON appointments.idPatient1 = patients.idPatient
 WHERE doctorReport IS NOT NULL
 ORDER BY idAppointment ASC
+
+-- :name complete-appointment :! :n
+-- :doc complete appointment
+UPDATE appointments
+SET doctorReport = :doctorReport
+WHERE idAppointment = :idAppointment
+
+-- :name get-appointments-sum :? :*
+-- :doc get total earingings from treatments
+SELECT SUM(price) AS 'total' FROM appointments
+WHERE doctorReport IS NOT NULL
+
