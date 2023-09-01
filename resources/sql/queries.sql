@@ -150,3 +150,11 @@ SELECT * FROM appointments
 WHERE time = :time AND date = :date
 
 ---------------- COMPLETED APPOINTMENTS -------------------------
+
+-- :name get-completed-appointments :? :*
+-- :doc shows all appointments (completed)
+SELECT * from appointments
+                  JOIN treatments ON appointments.idTreatment1 = treatments.idTreatment
+                  JOIN patients ON appointments.idPatient1 = patients.idPatient
+WHERE doctorReport IS NOT NULL
+ORDER BY idAppointment ASC

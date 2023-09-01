@@ -82,7 +82,9 @@
     {:appointments (db/get-appointments)}))
 
 (defn completedApps-page [request]
-  (layout/render request "appointments/completedApps.html"))
+  (layout/render
+    request "appointments/completedApps.html"
+    {:appointments (db/get-completed-appointments)}))
 
 (defn doctorReport-page [request]
   (layout/render request "appointments/doctorReport.html"))
@@ -299,7 +301,7 @@
    ["/updateAppointment" {:get updateApp-page}]
    ["/deleteAppointment" {:get deleteApp-page}]
 
-   ["/appointmentHistory" {:get createApp-page}]
-   ["/addDoctorReport" {:get createApp-page}]
+   ["/appointmentHistory" {:get completedApps-page}]
+   ["/addDoctorReport" {:get doctorReport-page}]
    ])
 

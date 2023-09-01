@@ -1,8 +1,36 @@
 {% extends "base.html" %}
 {% block content %}
 <div class=" alignCenter">
-
-    <p>This page works!</p>
+    <div class="columns">
+        <div class="column" style="text-align: center">
+            <h1><b>APPOINTMENTS HISTORY</b></h1>
+            <br>
+            <table id="table" class="table is-bordered is-striped">
+                <thead style="background-color: cornflowerblue">
+                <tr>
+                    <th>Patient Card No.</th>
+                    <th>Full Name</th>
+                    <th>Treatment</th>
+                    <th>Date & Time</th>
+                    <th>Price</th>
+                    <th>Doctor report</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in appointments %}
+                <tr>
+                    <td>{{item.healthcardnumber}}</td>
+                    <td>{{item.name}} {{item.surname}}</td>
+                    <td>{{item.treatmentname}}</td>
+                    <td>{{item.date}} / {{item.time}}h</td>
+                    <td>{{item.price}} RSD</td>
+                    <td>{{item.doctorreport}}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 </div>
 {% endblock %}
