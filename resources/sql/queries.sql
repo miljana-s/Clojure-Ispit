@@ -129,10 +129,11 @@ DELETE FROM appointments
 WHERE idAppointment = :idAppointment
 
 -- :name get-appointments :? :*
--- :doc shows all appointments
+-- :doc shows all appointments (uncomplete)
 SELECT * from appointments
                   JOIN treatments ON appointments.idTreatment1 = treatments.idTreatment
                   JOIN patients ON appointments.idPatient1 = patients.idPatient
+WHERE doctorReport IS NULL
 ORDER BY idAppointment ASC
 
 -- :name get-appointments-by-patient :? :*
@@ -147,3 +148,5 @@ ORDER BY idAppointment ASC
 -- :doc selects appointment by time and date
 SELECT * FROM appointments
 WHERE time = :time AND date = :date
+
+---------------- COMPLETED APPOINTMENTS -------------------------
