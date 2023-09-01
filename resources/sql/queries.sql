@@ -126,10 +126,10 @@ WHERE idAppointment = :idAppointment
 -- :name delete-appointment! :! :n
 -- :doc delete appointment with id
 DELETE FROM appointments
-WHERE idAppointment = :idAppointment
+WHERE idAppointment = :id
 
 -- :name get-appointments :? :*
--- :doc shows all appointments (uncomplete)
+-- :doc shows all appointments (uncompleted)
 SELECT * from appointments
                   JOIN treatments ON appointments.idTreatment1 = treatments.idTreatment
                   JOIN patients ON appointments.idPatient1 = patients.idPatient

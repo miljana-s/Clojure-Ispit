@@ -1,8 +1,31 @@
-{% extends "base.html" %}
-{% block content %}
-<div class=" alignCenter">
+{% extends "base.html" %} {% block content %}
+<h1>
+    <b>REMOVE APPOINTMENT</b>
+</h1>
 
-    <p>This page works!</p>
-
+<div class="columns">
+    <div class="column ">
+        <form method="POST" action="/removeAppointment">
+            {% csrf-field %}
+            <div class="field">
+                <label class="label" for="id">
+                    Choose appointment
+                </label>
+                {% if errors.id %}
+                <div class="notification is-danger">
+                    {{errors.id|join}}
+                </div>
+                {% endif %}
+                <select class="input" name="id" id="id" st>
+                    {% for item in appointments %}
+                    <option value={{item.idappointment}}>{{item.idappointment}} | {{item.treatmentname}} - {{item.name}} {{item.surname}} - {{item.date}}/ {{item.time}}h</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <input type="submit" class="button is-primary" value="Remove appointment" />
+        </form>
+    </div>
 </div>
+
+
 {% endblock %}

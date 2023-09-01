@@ -77,7 +77,9 @@
            (select-keys flash [:time :date :errors]))))
 
 (defn deleteApp-page [request]
-  (layout/render request "appointments/deleteApp.html"))
+  (layout/render
+    request "appointments/deleteApp.html"
+    {:appointments (db/get-appointments)}))
 
 (defn completedApps-page [request]
   (layout/render request "appointments/completedApps.html"))
@@ -253,7 +255,10 @@
               (db/update-regular-appointment! params)
               (response/found "/appointments"))))))))
 
-
+;Delete appointment
+(defn delete-appointment! [{:keys [params]}]
+  (db/delete-appointment! params)
+  (response/found "/appointments"))
 
 
 ;-------------------------- ROUTING -----------------------------------------
@@ -274,6 +279,7 @@
 
    ["/addAppointment" {:post add-appointment!}]
    ["/editAppointment" {:post update-appointment!}]
+   ["/removeAppointment" {:post delete-appointment!}]
 
    ; ---------- GET REQ ------------------------
    ["/" {:get home-page}]
