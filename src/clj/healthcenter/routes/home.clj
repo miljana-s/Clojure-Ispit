@@ -171,7 +171,7 @@
   (if-let [errors (validate-patient params)]
     (-> (response/found "/createPatient")
         (assoc :flash (assoc params :errors errors)))
-    (let [patient (db/get-patient-by-card params)]
+    (let [patient (db/get-patient-by-card1 params)]
       (if patient
         (-> (response/found "/createPatient")
             (assoc :flash (assoc params :errors {:healthCardNumber "Patient with that health card number already exists!!"})))

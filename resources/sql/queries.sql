@@ -16,6 +16,11 @@ WHERE idPatient = :idPatient
 SELECT * FROM patients
 WHERE healthCardNumber = :healthCardNumber AND idPatient != :idPatient
 
+-- :name get-patient-by-card1 :? :1
+-- :doc get patient by card
+SELECT * FROM patients
+WHERE healthCardNumber = :healthCardNumber
+
 -- :name update-patient! :! :n
 -- :doc update existing patient with id
 UPDATE patients
